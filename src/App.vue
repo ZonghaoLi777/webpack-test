@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <img alt="Vue logo" @click="show" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <component v-if="componentName" :is="componentName"/>
+    <component v-if="componentShow" :is="componentName"/>
   </div>
 </template>
 
@@ -17,16 +17,22 @@ export default {
   },
   data() {
     return {
-      componentName: ''
+      componentShow: false,
+      componentName: '',
+    }
+  },
+  methods: {
+    show() {
+      const name = ['test1', 'test2'][Math.round(Math.random())];
+      console.log(name)
+      import(`./components/${name}/index.vue`).then((module) => {
+          Vue.component('my-component-name', module.default)
+          this.componentShow = !this.componentShow;
+          this.componentName = 'my-component-name'
+      })
     }
   },
   mounted() {
-    const name = ['test1', 'test2'][Math.round(Math.random())];
-    console.log(name)
-    import(`./components/${name}/index.vue`).then((module) => {
-      Vue.component('my-component-name', module.default)
-      this.componentName = 'my-component-name'
-    })
   },
 }
 </script>
